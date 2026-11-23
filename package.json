@@ -1,0 +1,14 @@
+{
+  "name": "azeez-olawale-portfolio",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "node src/build.mjs",
+    "start": "node src/server.mjs",
+    "test": "node --test src/verify.test.mjs",
+    "dev": "npm run build && npm start"
+  }
+}
