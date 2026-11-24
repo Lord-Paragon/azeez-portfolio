@@ -8,6 +8,15 @@ Use Node.js 22 or newer. From this folder, run `npm run dev` and open `http://lo
 
 ## Deploy
 
+### Vercel
+
+- Import the Git repository. Set Root Directory to the folder containing package.json and vercel.json. Use azeez-portfolio if the repository also contains the parent workspace.
+- Use the Other framework preset. vercel.json sets the build command to npm run build and the output directory to dist. Vercel serves api/contact.js as a Node.js Function at /api/contact.
+- Add RESEND_API_KEY and CONTACT_FROM in Vercel’s Environment Variables for Production and any Preview deployments that should send email. Set SITE_URL to the production site’s HTTPS origin in Production. Leave SITE_URL unset in Preview so the contact handler uses the current host.
+- Redeploy after changing the environment variables. Open /contact/ and submit a test message to confirm delivery. For a deployment with multiple instances, use a Vercel Firewall rate-limit rule if available. The function’s built-in limit is per instance.
+
+### Other Node.js hosts
+
 1. Use a Node.js host with HTTPS. Set the build command to `npm run build` and the start command to `npm start`. The host can assign `PORT`.
 2. Set `SITE_URL` to the public HTTPS origin before building to generate canonical URLs, social metadata and the sitemap. Use the same origin at runtime for the contact form’s same-origin check.
 3. Verify a sending domain in Resend by adding the DNS records shown in its dashboard. Create an API key with sending access. Store it as `RESEND_API_KEY` in the host's secret settings. Set `CONTACT_FROM` to a sender on that verified domain, for example `Portfolio <portfolio@your-domain.example>`. The form sends to the portfolio owner’s Gmail address. Replies go to the visitor’s address.

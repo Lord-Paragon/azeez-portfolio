@@ -33,7 +33,7 @@ async function readForm(req) {
   return new URLSearchParams(Buffer.concat(chunks).toString('utf8'));
 }
 
-export function portfolioServer({env = process.env, send = fetch} = {}) {
+export function portfolioHandler({env = process.env, send = fetch} = {}) {
   const attempts = new Map();
   const windowMs = 15 * 60_000;
   let lastCleanup = 0;
@@ -94,7 +94,7 @@ export function portfolioServer({env = process.env, send = fetch} = {}) {
     return response.ok && acceptance.id ? status(res, 200) : status(res, 502, failure);
   }
 
-  return createServer(async (req,res) => {
+  return async (req,res) => {
     res.setHeader('X-Content-Type-Options','nosniff');
     res.setHeader('Referrer-Policy','strict-origin-when-cross-origin');
     res.setHeader('Content-Security-Policy',"default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'");
@@ -132,7 +132,11 @@ export function portfolioServer({env = process.env, send = fetch} = {}) {
       if (!res.headersSent) status(res, 502, failure);
       else res.destroy();
     }
-  });
+  };
+}
+
+export function portfolioServer(options) {
+  return createServer(portfolioHandler(options));
 }
 
 if (process.argv[1] && pathToFileURL(resolve(process.argv[1])).href === import.meta.url) {
